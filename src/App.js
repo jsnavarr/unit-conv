@@ -59,10 +59,12 @@ class App extends Component {
         baseUnitOption: null,
         AllBaseOptions: getAllBaseOptions(),
         AllTargetOptions: null,
+        selTargetOptions:[],
       }; 
-      this.handleChange = this.handleChange.bind(this);
+      this.handleBaseUnitChange = this.handleBaseUnitChange.bind(this);
       this.getBaseUnitOption = this.getBaseUnitOption.bind(this);
       this.getAllTargetOptions = this.getAllTargetOptions.bind(this);
+      this.handleTargetUnitChange = this.handleTargetUnitChange.bind(this);
   }
 
   getBaseUnitOption(text){
@@ -99,14 +101,33 @@ class App extends Component {
     if(found) return arr;
   }
 
-  handleChange(event) {
+  handleBaseUnitChange(event) {
     let text = event.target.textContent;
-    console.log('text ', text);
+    // console.log('text ', text);
     this.setState({baseUnitOption: this.getBaseUnitOption(text),
       AllTargetOptions: this.getAllTargetOptions(text)
       });
   }
 
+  handleTargetUnitChange(event) {
+    var selArr=[];
+    var sel = document.getElementById("convert-to-dropdown").querySelectorAll("a");  
+    //if text then an option from the dropdown menu was selected
+    if(event.target.textContent){
+      //get the options selected but it does not have the last one which is 'text'
+      for(let i = 0; i<sel.length; i++){
+        console.log('i ', i, ' ', sel[i].textContent);
+        selArr.push(sel[i].textContent)
+      }
+      selArr.push(event.target.textContent);
+      this.setState({selTargetOptions: selArr});
+    } else { //an option was unselected
+      selArr = this.state.selTargetOptions; //all the previous selected options
+      let idx =selArr.indexOf(event.target.parentNode.textContent); //this is the just removed option
+      selArr.splice(idx, 1); //remove the option
+      this.setState({selTargetOptions: selArr});
+    }
+  }
 
   render(){
   return (
@@ -117,14 +138,15 @@ class App extends Component {
             fluid
             selection
             options = {this.state.AllBaseOptions}
-            onChange={this.handleChange}
+            onChange={this.handleBaseUnitChange}
             />
         </Segment>
         <Segment>
-        <Dropdown placeholder='Convert to' 
+        <Dropdown id = "convert-to-dropdown" placeholder='Convert to' 
           fluid 
           multiple selection 
-          options = {this.state.AllTargetOptions}/>
+          options = {this.state.AllTargetOptions}
+          onChange = {this.handleTargetUnitChange}/>
         </Segment>
       </Segment.Group>
       <Segment.Group horizontal>
@@ -132,14 +154,15 @@ class App extends Component {
           <Input
             label={{ basic: true, 
               content: this.state.baseUnitOption !== null ? this.state.AllBaseOptions[this.state.baseUnitOption].key : '' }}
-              // content: ''}}
             labelPosition='right'
             placeholder='Enter amount to convert...'
           />
         </Segment>
       <Segment>
+        {/* {this.state..map((guess, idx) => */}
         <Input
-          label={{ basic: true, content: '' }}
+          label={{ basic: true, 
+            content: this.state.AllTargetOptions !== null ? this.state.AllBaseOptions[this.state.baseUnitOption].key : '' }}
           labelPosition='right'
           placeholder='Enter amount to convert...'
         />
