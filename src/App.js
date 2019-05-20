@@ -37,7 +37,7 @@ const lengthOptions = [
     value: 'inche',
   },
   {
-    key: 'feets',
+    key: 'feet',
     text: 'feets (ft)',
     value: 'feet',
   },
@@ -48,23 +48,66 @@ const lengthOptions = [
   },
 ]
 
-function getAllOptions(){
+function getAllBaseOptions(){
   return weightOptions.concat(lengthOptions);
 }
 
-// function App() {
 class App extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        baseUnitValue: '',
+        baseUnitOption: null,
+        AllBaseOptions: getAllBaseOptions(),
+        AllTargetOptions: null,
       }; 
       this.handleChange = this.handleChange.bind(this);
+      this.getBaseUnitOption = this.getBaseUnitOption.bind(this);
+      this.getAllTargetOptions = this.getAllTargetOptions.bind(this);
   }
+
+  getBaseUnitOption(text){
+    let i=0;
+    while(this.state.AllBaseOptions[i].text !== text){
+      i++;
+    }
+    return i;
+  }
+
+  getAllTargetOptions(text){
+    
+    let arr=[];
+    let found = false;
+    //search text in the weight options and return a new array not containing text
+    weightOptions.forEach(function(wo){
+      if(wo.text !== text){
+        arr.push(wo);
+      } else {
+        found = true;
+      }
+    });
+    if(found) return arr;
+
+    arr =[];
+    //search text in the length options and return a new array not containing text
+    lengthOptions.forEach(function(wo){
+      if(wo.text !== text){
+        arr.push(wo);
+      } else {
+        found = true;
+      }
+    });
+    if(found) return arr;
+  }
+
   handleChange(event) {
-    this.setState({baseUnitValue: event.target.value});
-    console.log('hola', event.target)
+    let text = event.target.textContent;
+    console.log('text ', text);
+    this.setState({baseUnitOption: this.getBaseUnitOption(text),
+      AllTargetOptions: this.getAllTargetOptions(text)
+      });
   }
+
+
   render(){
   return (
     <div>
@@ -73,8 +116,7 @@ class App extends Component {
           <Dropdown placeholder='Base Unit' 
             fluid
             selection
-            options = {getAllOptions()}
-            value={this.state.baseUnitValue}
+            options = {this.state.AllBaseOptions}
             onChange={this.handleChange}
             />
         </Segment>
@@ -82,20 +124,22 @@ class App extends Component {
         <Dropdown placeholder='Convert to' 
           fluid 
           multiple selection 
-          options = {[]}/>
+          options = {this.state.AllTargetOptions}/>
         </Segment>
       </Segment.Group>
       <Segment.Group horizontal>
         <Segment>
           <Input
-            label={{ basic: true, content: 'kg' }}
+            label={{ basic: true, 
+              content: this.state.baseUnitOption !== null ? this.state.AllBaseOptions[this.state.baseUnitOption].key : '' }}
+              // content: ''}}
             labelPosition='right'
             placeholder='Enter amount to convert...'
           />
         </Segment>
       <Segment>
         <Input
-          label={{ basic: true, content: 'kg' }}
+          label={{ basic: true, content: '' }}
           labelPosition='right'
           placeholder='Enter amount to convert...'
         />
