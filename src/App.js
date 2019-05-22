@@ -68,11 +68,15 @@ class App extends Component {
   }
 
   getBaseUnitOption(text){
+    console.log('text ', text);
     let i=0;
-    while(this.state.AllBaseOptions[i].text !== text){
+    while(i<this.state.AllBaseOptions.length && this.state.AllBaseOptions[i].text !== text){
+      console.log('i ', i);
       i++;
     }
-    return i;
+    if(i<this.state.AllBaseOptions.length)
+      return i;
+    return null;
   }
 
   getAllTargetOptions(text){
@@ -87,8 +91,9 @@ class App extends Component {
         found = true;
       }
     });
+    console.log(arr);
     if(found) return arr;
-
+    
     arr =[];
     //search text in the length options and return a new array not containing text
     lengthOptions.forEach(function(wo){
@@ -98,15 +103,27 @@ class App extends Component {
         found = true;
       }
     });
+    console.log(arr);
     if(found) return arr;
   }
 
   handleBaseUnitChange(event) {
     let text = event.target.textContent;
-    // console.log('text ', text);
-    this.setState({baseUnitOption: this.getBaseUnitOption(text),
-      AllTargetOptions: this.getAllTargetOptions(text)
-      });
+    var baseUO = 0;
+    console.log('text ', text);
+    //if previously no option has been selected then text contains all the options
+    //and baseUnit will keep its zero initialization value
+    if(text.length < 20){
+      baseUO = this.getBaseUnitOption(text); //get the option selected
+    } else {
+      text = this.state.AllBaseOptions[baseUO].text; //pounds (lb)
+    }
+      
+    if(baseUO !== null) { //if an option was selected
+      this.setState({baseUnitOption: baseUO,
+        AllTargetOptions: this.getAllTargetOptions(text)
+        });  
+    }
   }
 
   handleTargetUnitChange(event) {
@@ -131,42 +148,71 @@ class App extends Component {
 
   render(){
   return (
-    <div>
-      <Segment.Group horizontal>
-        <Segment>
-          <Dropdown placeholder='Base Unit' 
+    <div class="main">
+      <Segment> To start select the base unit on the left and the target unit on the right:
+        <Segment.Group horizontal>
+          <Segment style={{width: "-webkit-fill-available", maxWidth: "400px"}}>
+          <Input
+            label={
+              <Dropdown 
+                style={{width: "auto", maxWidth: "fit-content"}}
+                id="base-unit-dropdown" placeholder='Base Unit' 
+                fluid
+                selection
+                options = {this.state.AllBaseOptions}
+                onChange={this.handleBaseUnitChange}
+              />}
+            // label={{ basic: true, 
+              // content: this.state.baseUnitOption !== null ? this.state.AllBaseOptions[this.state.baseUnitOption].key : '' }}
+            labelPosition='right'
+            placeholder='Enter amount to convert...'
+          />
+
+            {/* <Dropdown id="base-unit-dropdown" placeholder='Base Unit' 
+              fluid
+              selection
+              options = {this.state.AllBaseOptions}
+              onChange={this.handleBaseUnitChange}
+              /> */}
+          </Segment>
+          <Segment style={{margin: "0 20px", width: "auto"}}>
+          <Dropdown id = "convert-to-dropdown" placeholder='Convert to' 
+            fluid 
+            multiple selection 
+            options = {this.state.AllTargetOptions}
+            onChange = {this.handleTargetUnitChange}/>
+          </Segment>
+        </Segment.Group>
+      </Segment>
+
+      <Segment.Group>
+        {/* <Segment floated='left' style={{width: "auto", maxWidth: "300px"}}>
+          <Input
+            label={<Dropdown id="base-unit-dropdown" placeholder='Base Unit' 
             fluid
             selection
             options = {this.state.AllBaseOptions}
             onChange={this.handleBaseUnitChange}
-            />
-        </Segment>
-        <Segment>
-        <Dropdown id = "convert-to-dropdown" placeholder='Convert to' 
-          fluid 
-          multiple selection 
-          options = {this.state.AllTargetOptions}
-          onChange = {this.handleTargetUnitChange}/>
-        </Segment>
-      </Segment.Group>
-      <Segment.Group horizontal>
-        <Segment>
-          <Input
-            label={{ basic: true, 
-              content: this.state.baseUnitOption !== null ? this.state.AllBaseOptions[this.state.baseUnitOption].key : '' }}
+            />}
+            // label={{ basic: true, 
+              // content: this.state.baseUnitOption !== null ? this.state.AllBaseOptions[this.state.baseUnitOption].key : '' }}
             labelPosition='right'
             placeholder='Enter amount to convert...'
           />
-        </Segment>
-      <Segment>
-        {/* {this.state..map((guess, idx) => */}
-        <Input
-          label={{ basic: true, 
-            content: this.state.AllTargetOptions !== null ? this.state.AllBaseOptions[this.state.baseUnitOption].key : '' }}
-          labelPosition='right'
-          placeholder='Enter amount to convert...'
-        />
-      </Segment>
+        </Segment> */}
+        {/* <Segment.Group> */}
+            {this.state.selTargetOptions.map((target, idx) =>
+              <Segment inverted color='teal' style={{margin: "0 auto", maxWidth: "400px"}}>
+                <Input
+                  key = {target}
+                  label={{ basic: true, 
+                    content: target }}
+                  labelPosition='right'
+                  disabled
+                />
+              </Segment>
+            )}
+        {/* </Segment.Group> */}
       </Segment.Group>
     </div>
   );
