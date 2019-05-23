@@ -148,14 +148,15 @@ class App extends Component {
 
   render(){
   return (
-    <div class="main">
-      <Segment> To start select the base unit on the left and the target unit on the right:
-        <Segment.Group horizontal>
-          <Segment style={{width: "-webkit-fill-available", maxWidth: "400px"}}>
+    <div className="main">
+      <Segment style={{background: "bisque", color: "midnightblue", fontSize: "16px"}}> 
+        To start select the base unit on the left and the target unit on the right:
+        <Segment.Group horizontal style={{background: "royalblue"}}>
+          <Segment style={{width: "-webkit-fill-available", maxWidth: "400px", background: "royalblue"}}>
           <Input
             label={
               <Dropdown 
-                style={{width: "auto", maxWidth: "fit-content"}}
+                style={{width: "auto", maxWidth: "fit-content", background:"bisque"}}
                 id="base-unit-dropdown" placeholder='Base Unit' 
                 fluid
                 selection
@@ -177,6 +178,7 @@ class App extends Component {
           </Segment>
           <Segment style={{margin: "0 20px", width: "auto"}}>
           <Dropdown id = "convert-to-dropdown" placeholder='Convert to' 
+            style={{background: "lightcyan"}}
             fluid 
             multiple selection 
             options = {this.state.AllTargetOptions}
@@ -185,7 +187,7 @@ class App extends Component {
         </Segment.Group>
       </Segment>
 
-      <Segment.Group>
+      <Segment.Group className="target-options">
         {/* <Segment floated='left' style={{width: "auto", maxWidth: "300px"}}>
           <Input
             label={<Dropdown id="base-unit-dropdown" placeholder='Base Unit' 
@@ -201,18 +203,22 @@ class App extends Component {
           />
         </Segment> */}
         {/* <Segment.Group> */}
+        <Segment style={{margin: "0 auto", background: "lightcyan", display: "inline-block", width: "100%"}}>
             {this.state.selTargetOptions.map((target, idx) =>
-              <Segment inverted color='teal' style={{margin: "0 auto", maxWidth: "400px"}}>
+                <div style={{display:"inline-block"}}>
                 <Input
+                  style={{opacity: "1", margin: "5px 10px"}}
                   key = {target}
                   label={{ basic: true, 
-                    content: target }}
+                    content: target
+                  }}
                   labelPosition='right'
                   disabled
                 />
-              </Segment>
+              </div>
             )}
         {/* </Segment.Group> */}
+        </Segment>
       </Segment.Group>
     </div>
   );
