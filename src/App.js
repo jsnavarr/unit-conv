@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Segment, Input, Dropdown} from 'semantic-ui-react';
+import {Segment, Input, Dropdown, Header, Divider} from 'semantic-ui-react';
 
 import './App.css';
 
@@ -294,7 +294,7 @@ class App extends Component {
   }
 
   handleAmountChange(event) {
-    // console.log('amount change', event.target.value);
+    console.log('amount change', event.target.value);
     //verify that value is a number
     let amount = parseFloat(event.target.value);
     if(amount){
@@ -305,7 +305,7 @@ class App extends Component {
         this.calculateConversions(amount);
       } 
     } else {
-      // console.log('amount is empty or not a number')
+      console.log('amount is empty or not a number')
       //delete previous calculated conversions
       this.calculateConversions(0);
       this.setState({amountToConvert: null});
@@ -339,14 +339,20 @@ class App extends Component {
   render(){
   return (
     <div className="main">
+      <Header as='h3' block>
+        Unit Conversion
+      </Header>
+      <Divider horizontal>To start select the base unit on the left and the target unit on the right:</Divider>
       <Segment style={{background: "lightblue", color: "midnightblue", fontSize: "16px"}}> 
-        To start select the base unit on the left and the target unit on the right:
         <Segment.Group horizontal style={{background: "royalblue"}}>
-          <Segment style={{width: "-webkit-fill-available", maxWidth: "400px", background: "royalblue"}}>
+          <Segment 
+          style={{display: "flex",minWidth: "40%", maxWidth: "50%", height: "fit-content", background: "royalblue"}}
+          >
           <Input
+            style={{maxWidth: "50%", background:"red"}}
             label={
               <Dropdown 
-                style={{width: "auto", maxWidth: "fit-content", background:"azure"}}
+                style={{maxWidth: "100%", background:"azure"}}
                 id="base-unit-dropdown" placeholder='Base Unit' 
                 fluid
                 selection
@@ -358,7 +364,9 @@ class App extends Component {
             onChange={this.handleAmountChange}
           />
           </Segment>
-          <Segment style={{margin: "0 20px", width: "auto"}}>
+          <Segment 
+          style={{margin: "0 20px", width: "auto"}}
+          >
           <Dropdown id = "convert-to-dropdown" placeholder='Convert to' 
             style={{background: "azure"}}
             fluid 
@@ -369,6 +377,7 @@ class App extends Component {
           </Segment>
         </Segment.Group>
       </Segment>
+      <Divider horizontal>Your Conversions</Divider>
       <Segment.Group className="target-options">
         <Segment style={{margin: "0 auto", background: "lightblue", display: "inline-block", width: "100%", textAlign:"left"}}>
             {this.state.selTargetOptions.map((target, idx) =>
