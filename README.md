@@ -8,7 +8,7 @@ If I had to chose the stack to build this app then I would just use html/css/jav
 
 This is a screenshot of the app where you can see the style provided by semantic ui, but I also styled this app with the colors I wanted.
  
-![Welcome](https://github.com/jsnavarr/unic-conv/blob/master/public/images/mainscreen.png)
+![Welcome](https://github.com/jsnavarr/unit-conv/blob/master/public/images/mainscreen.png)
 
 
 
