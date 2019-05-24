@@ -6,8 +6,13 @@ body {
   width: 80%;
   margin: 15px auto;
 }
+#convert-to-dropdown .label {
+  background: orange;
+  color: midnightblue;
+}
+
 
 .target-options .segment .input .label {
-  background: royalblue;
-  color: azure;
+  background: orange;
+  color: midnightblue;
 }
